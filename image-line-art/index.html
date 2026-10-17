@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Turn your photos into beautiful black and white line art drawings online for free.">
+<title>Image Line Art Effect - ToolSarthi</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f6fb;
+    color: #172033;
+}
+
+header {
+    background: #ffffff;
+    padding: 18px 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+header a {
+    text-decoration: none;
+    color: #2563eb;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+main {
+    max-width: 850px;
+    margin: 25px auto;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 5px 22px rgba(0,0,0,0.06);
+}
+
+h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-top: 5px;
+}
+
+.intro {
+    text-align: center;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.upload-box {
+    border: 2px dashed #93a9ca;
+    border-radius: 12px;
+    padding: 25px 12px;
+    text-align: center;
+    margin: 22px 0;
+    background: #f8faff;
+}
+
+input[type="file"] {
+    max-width: 100%;
+    margin-top: 12px;
+}
+
+.control {
+    margin: 20px 0;
+}
+
+.control label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #2563eb;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+button {
+    flex: 1;
+    min-width: 130px;
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button.secondary {
+    background: #475569;
+}
+
+button.download {
+    background: #15803d;
+}
+
+.preview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.preview-box {
+    min-width: 0;
+    text-align: center;
+}
+
+.preview-box h3 {
+    font-size: 15px;
+}
+
+.preview-box img,
+.preview-box canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+}
+
+#status {
+    text-align: center;
+    color: #475569;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+footer a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .preview {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <a href="../">ToolSarthi</a>
+</header>
+
+<main>
+<section class="card">
+
+    <h1>✏️ Image Line Art Effect</h1>
+
+    <p class="intro">
+        Turn your photos into beautiful black and white line drawings.
+        Upload an image, adjust the effect and download your artwork for free.
+    </p>
+
+    <div class="upload-box">
+        <strong>Choose your photo</strong><br>
+        <input type="file" id="upload" accept="image/*">
+        <p>JPG, PNG and WebP images supported by your browser.</p>
+    </div>
+
+    <div class="control">
+        <label for="strength">
+            Line Art Intensity: <span id="strengthValue">50</span>%
+        </label>
+        <input type="range" id="strength" min="10" max="100" value="50">
+    </div>
+
+    <div class="buttons">
+        <button id="apply" disabled>Apply Effect</button>
+        <button id="reset" class="secondary" disabled>Reset</button>
+        <button id="download" class="download" disabled>Download Image</button>
+    </div>
+
+    <p id="status" role="status" aria-live="polite">
+        Please upload a photo to get started.
+    </p>
+
+    <div class="preview">
+        <div class="preview-box">
+            <h3>Original Image</h3>
+            <img id="original" alt="Original uploaded photo">
+        </div>
+
+        <div class="preview-box">
+            <h3>Line Art Result</h3>
+            <canvas id="result" aria-label="Generated line art image"></canvas>
+        </div>
+    </div>
+
+</section>
+</main>
+
+<footer>
+    <p>Free online image tool by ToolSarthi.</p>
+    <a href="../">Back to Home</a>
+</footer>
+
+<script>
+const upload = document.getElementById("upload");
+const original = document.getElementById("original");
+const canvas = document.getElementById("result");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const strength = document.getElementById("strength");
+const strengthValue = document.getElementById("strengthValue");
+const applyButton = document.getElementById("apply");
+const resetButton = document.getElementById("reset");
+const downloadButton = document.getElementById("download");
+const status = document.getElementById("status");
+
+let sourceImage = null;
+let originalURL = null;
+let busy = false;
+
+strength.addEventListener("input", () => {
+    strengthValue.textContent = strength.value;
+});
+
+upload.addEventListener("change", () => {
+    const file = upload.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        status.textContent = "Please select a valid image file.";
+        upload.value = "";
+        return;
+    }
+
+    if (originalURL) URL.revokeObjectURL(originalURL);
+
+    originalURL = URL.createObjectURL(file);
+    sourceImage = new Image();
+
+    sourceImage.onload = () => {
+        original.src = originalURL;
+
+        const maxSide = 1400;
+        const scale = Math.min(
+            1,
+            maxSide / Math.max(sourceImage.naturalWidth, sourceImage.naturalHeight)
+        );
+
+        canvas.width = Math.max(1, Math.round(sourceImage.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(sourceImage.naturalHeight * scale));
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+
+        applyButton.disabled = false;
+        resetButton.disabled = false;
+        downloadButton.disabled = true;
+
+        status.textContent = "Photo loaded. Tap Apply Effect to create line art.";
+    };
+
+    sourceImage.onerror = () => {
+        sourceImage = null;
+        applyButton.disabled = true;
+        status.textContent = "Could not open this image. Please try another photo.";
+    };
+
+    sourceImage.src = originalURL;
+});
+
+function createLineArt() {
+    if (!sourceImage || busy) return;
+
+    busy = true;
+    applyButton.disabled = true;
+    downloadButton.disabled = true;
+    status.textContent = "Creating line art... Please wait.";
+
+    setTimeout(() => {
+        try {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.drawImage(sourceImage, 0, 0, w, h);
+
+            const image = ctx.getImageData(0, 0, w, h);
+            const data = image.data;
+            const gray = new Float32Array(w * h);
+
+            for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+                gray[p] = 0.299 * data[i] +
+                          0.587 * data[i + 1] +
+                          0.114 * data[i + 2];
+            }
+
+            const output = ctx.createImageData(w, h);
+            const out = output.data;
+            const amount = Number(strength.value) / 100;
+            const threshold = 12 + amount * 48;
+
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const p = y * w + x;
+                    const left = gray[y * w + Math.max(0, x - 1)];
+                    const right = gray[y * w + Math.min(w - 1, x + 1)];
+                    const up = gray[Math.max(0, y - 1) * w + x];
+                    const down = gray[Math.min(h - 1, y + 1) * w + x];
+
+                    const edge = Math.abs(right - left) +
+                                 Math.abs(down - up);
+
+                    const line = Math.max(
+                        0,
+                        Math.min(255, 255 - edge * (1.3 + amount * 2.7))
+                    );
+
+                    const value = line > 255 - threshold ? 255 : line;
+
+                    const i = p * 4;
+                    out[i] = value;
+                    out[i + 1] = value;
+                    out[i + 2] = value;
+                    out[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(output, 0, 0);
+            downloadButton.disabled = false;
+            status.textContent = "Line art created successfully!";
+        } catch (error) {
+            status.textContent =
+                "Could not process this image. Try a smaller photo.";
+        } finally {
+            busy = false;
+            applyButton.disabled = !sourceImage;
+        }
+    }, 30);
+}
+
+applyButton.addEventListener("click", createLineArt);
+
+resetButton.addEventListener("click", () => {
+    if (!sourceImage || busy) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+
+    downloadButton.disabled = false;
+    status.textContent = "Original image restored.";
+});
+
+downloadButton.addEventListener("click", () => {
+    if (!sourceImage || busy) return;
+
+    canvas.toBlob(blob => {
+        if (!blob) {
+            status.textContent = "Download failed. Please try again.";
+            return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "toolsarthi-line-art.png";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        status.textContent = "Your line art image is ready to download.";
+    }, "image/png");
+});
+</script>
+
+</body>
+      </html>
