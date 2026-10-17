@@ -1,22 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us | ToolSarthi</title>
-  <meta name="description" content="Contact ToolSarthi for questions, suggestions or feedback.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us - ToolSarthi</title>
+
+    <meta name="description" content="Contact ToolSarthi for questions, suggestions and feedback.">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fc;
+            color: #222;
+            line-height: 1.7;
+        }
+
+        header {
+            background: #0756c9;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 35px auto;
+            padding: 25px;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .email-box {
+            margin: 25px 0;
+            padding: 18px 10px;
+            background: #eef5ff;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .email-link {
+            color: #0756c9;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .email-button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 12px 24px;
+            background: #0756c9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .email-button:hover {
+            background: #0645a3;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 22px;
+            color: #0756c9;
+            text-decoration: none;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 22px 12px;
+            background: #111827;
+            color: white;
+            text-align: center;
+        }
+
+        footer a {
+            display: inline-block;
+            color: white;
+            margin: 5px 8px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .contact-card {
+                padding: 25px 15px;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>Contact Us</h1>
+<header>
+    <h1>Contact Us</h1>
+    <p>We're happy to hear from you!</p>
+</header>
 
-  <p>If you have any questions, suggestions or feedback about ToolSarthi, we would love to hear from you.</p>
+<main>
+    <div class="contact-card">
 
-  <p>You can contact us by email:</p>
+        <h2>Get in Touch 📩</h2>
 
-  <p><strong>Email:</strong> mohityad9329@gmail.com</p>
+        <p>
+            Have a question, suggestion, or feedback about ToolSarthi?
+            We would love to hear from you.
+        </p>
 
-  <p>We will try our best to respond to your message as soon as possible.</p>
+        <div class="email-box">
+            <p><strong>Email Us</strong></p>
+
+            <a class="email-link"
+               href="mailto:mohityad9329@gmail.com">
+                mohityad9329@gmail.com
+            </a>
+        </div>
+
+        <a class="email-button"
+           href="mailto:mohityad9329@gmail.com?subject=ToolSarthi%20Contact">
+            ✉️ Send Us an Email
+        </a>
+
+        <p>We will try our best to respond as soon as possible.</p>
+
+        <a class="back-home" href="index.html">← Back to Home</a>
+
+    </div>
+</main>
+
+<footer>
+    <p>© 2026 ToolSarthi. All Rights Reserved.</p>
+
+    <a href="index.html">Home</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="about-us.html">About Us</a>
+    <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+</footer>
 
 </body>
 </html>
